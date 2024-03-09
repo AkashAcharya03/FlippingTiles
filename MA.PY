@@ -9,7 +9,7 @@ pygame.init()
 # Variables for Game
 gameWidth = 840
 gameHeight = 640
-picSize = 128
+picSize = 80
 gameColumns = 5
 gameRows = 4
 padding = 10
@@ -25,11 +25,11 @@ selection2 = None
 # Loading the pygame screen.
 screen = pygame.display.set_mode((gameWidth, gameHeight))
 pygame.display.set_caption('Memory Game')
-gameIcon = pygame.image.load('images/Apple.png')
+gameIcon = pygame.image.load('images/chrome.png')
 pygame.display.set_icon(gameIcon)
 
 # Load the BackGround image into Python
-bgImage = pygame.image.load('Background.png')
+bgImage = pygame.image.load('background.jpg')
 bgImage = pygame.transform.scale(bgImage, (gameWidth, gameHeight))
 bgImageRect = bgImage.get_rect()
 
@@ -86,8 +86,6 @@ active = False
 text = ''
 done = False
 
-# Start timer
-start_time = time.time()
 
 
 gameLoop = True
@@ -134,6 +132,8 @@ while gameLoop:
     pygame.display.flip()
 
 # Start game loop after player enters name
+# Start timer
+start_time = time.time()
 
 while gameLoop:
     # Load background image
