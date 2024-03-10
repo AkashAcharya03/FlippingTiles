@@ -87,6 +87,16 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS scores (
 # Commit the changes to the database
 conn.commit()
 
+# Function to fetch top 5 players with their times
+def fetch_top_players():
+    cursor.execute("SELECT player_name, time_taken FROM scores ORDER BY time_taken ASC LIMIT 5")
+    rows = cursor.fetchall()
+    top_players = [(row[0], row[1]) for row in rows]
+    return top_players
+
+# Fetch top 5 players
+top_players = fetch_top_players()
+
 # Input box for entering player's name
 input_box = pygame.Rect(300, 200, 140, 32)
 color_inactive = pygame.Color('lightskyblue3')
@@ -105,6 +115,13 @@ while True:
     while not done:
         # Load background image
         screen.blit(bgImage, bgImageRect)
+
+        # Display top 5 players
+        top_players_text = font.render("Top 5 Players:", True, WHITE)
+        screen.blit(top_players_text, (600, 20))
+        for idx, (name, time_taken) in enumerate(top_players):
+            player_text = font.render(f"{idx+1}. {name}: {time_taken} sec", True, WHITE)
+            screen.blit(player_text, (600, 50 + idx * 30))
 
         # Input events
         for event in pygame.event.get():
@@ -130,14 +147,21 @@ while True:
                     else:
                         text += event.unicode
 
+        # Define brown color
+        BROWN = (165, 42, 42)  # Brown color RGB value
+
         # Render the input_box and text.
-        pygame.draw.rect(screen, color, input_box, 2)
+        pygame.draw.rect(screen, BROWN, input_box, 2)  # Change color to brown
         font = pygame.font.Font(None, 32)
-        txt_surface = font.render(text, True, color)
-        width = max(200, txt_surface.get_width() + 10)
+        text_surface = font.render(text, True, BROWN)
+        width = max(200, text_surface.get_width() + 10)
         input_box.w = width
-        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
-        pygame.draw.rect(screen, color, input_box, 2)
+        screen.blit(text_surface, (input_box.x + 5, input_box.y + 5))
+
+        # Render "Enter Your Name" text with brown color
+        enter_name_font = pygame.font.Font(None, 24)
+        enter_name_text = enter_name_font.render("Enter Your Name", True, BROWN)  # Render with brown color
+        screen.blit(enter_name_text, (input_box.x, input_box.y - 30))
 
         pygame.display.flip()
 
@@ -193,6 +217,9 @@ while True:
 
         if win == 1:
             break
+
+    if not done:  # If the game was not completed (player quit), don't store the time in the database
+        continue
 
     # Insert the player's score into the database
     cursor.execute("INSERT INTO scores (player_name, time_taken) VALUES (?, ?)", (player_name, total_time))
