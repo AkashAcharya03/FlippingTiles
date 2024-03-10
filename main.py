@@ -59,7 +59,7 @@ def restart_game():
 
 # Loading the pygame screen.
 screen = pygame.display.set_mode((gameWidth, gameHeight))
-pygame.display.set_caption('Memory Game')
+pygame.display.set_caption('Tile Flip-Memory Game')
 gameIcon = pygame.image.load('images/chrome.png')
 pygame.display.set_icon(gameIcon)
 
@@ -125,10 +125,14 @@ while True:
 
         # Display top 5 players
         top_players_text = font.render("Top 5 Players:", True, WHITE)
-        screen.blit(top_players_text, (600, 20))
+        screen.blit(top_players_text, (550, 20))
+        #title
+        toptext = font.render("Tile Flip", True, WHITE)
+        toptext = pygame.transform.scale(toptext, (100, 60))
+        screen.blit(toptext, (353, 300))
         for idx, (name, time_taken) in enumerate(top_players):
             player_text = font.render(f"{idx+1}. {name}: {time_taken} sec", True, WHITE)
-            screen.blit(player_text, (600, 50 + idx * 30))
+            screen.blit(player_text, (550, 50 + idx * 30))
 
         # Input events
         for event in pygame.event.get():
@@ -155,7 +159,7 @@ while True:
                         text += event.unicode
 
         # Define brown color
-        BROWN = (165, 42, 42)  # Brown color RGB value
+        BROWN = (139, 69, 19)  # Brown color RGB value
 
         # Render the input_box and text.
         pygame.draw.rect(screen, BROWN, input_box, 2)  # Change color to brown
@@ -179,6 +183,7 @@ while True:
     while True:
         # Load background image
         screen.blit(bgImage, bgImageRect)
+        
 
         # Input events
         for event in pygame.event.get():
