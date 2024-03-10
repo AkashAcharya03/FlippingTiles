@@ -72,16 +72,23 @@ bgImageRect = bgImage.get_rect()
 font = pygame.font.Font(None, 36)
 
 # Connect to the SQLite database (or create it if it doesn't exist)
-conn = sqlite3.connect('game_scores.db')
+conn = sqlite3.connect('game_data.db')
 
 # Create a cursor object to execute SQL queries
 cursor = conn.cursor()
 
-# Create a table to store game scores if it doesn't exist
-cursor.execute('''CREATE TABLE IF NOT EXISTS scores (
+# Create a table to store player information if it doesn't exist
+cursor.execute('''CREATE TABLE IF NOT EXISTS Players (
                     id INTEGER PRIMARY KEY,
-                    player_name TEXT,
-                    time_taken INTEGER
+                    player_name TEXT
+                )''')
+
+# Create a table to store game scores if it doesn't exist
+cursor.execute('''CREATE TABLE IF NOT EXISTS Scores (
+                    id INTEGER PRIMARY KEY,
+                    player_id INTEGER,
+                    time_taken INTEGER,
+                    FOREIGN KEY(player_id) REFERENCES Players(id)
                 )''')
 
 # Commit the changes to the database
@@ -89,7 +96,7 @@ conn.commit()
 
 # Function to fetch top 5 players with their times
 def fetch_top_players():
-    cursor.execute("SELECT player_name, time_taken FROM scores ORDER BY time_taken ASC LIMIT 5")
+    cursor.execute("SELECT p.player_name, s.time_taken FROM Scores s JOIN Players p ON s.player_id = p.id ORDER BY s.time_taken ASC LIMIT 5")
     rows = cursor.fetchall()
     top_players = [(row[0], row[1]) for row in rows]
     return top_players
@@ -221,8 +228,15 @@ while True:
     if not done:  # If the game was not completed (player quit), don't store the time in the database
         continue
 
-    # Insert the player's score into the database
-    cursor.execute("INSERT INTO scores (player_name, time_taken) VALUES (?, ?)", (player_name, total_time))
+    # Insert the player's name into the Players table if it doesn't exist
+    cursor.execute("INSERT OR IGNORE INTO Players (player_name) VALUES (?)", (player_name,))
+
+    # Fetch the player's ID from the Players table
+    cursor.execute("SELECT id FROM Players WHERE player_name = ?", (player_name,))
+    player_id = cursor.fetchone()[0]
+
+    # Insert the player's score into the Scores table
+    cursor.execute("INSERT INTO Scores (player_id, time_taken) VALUES (?, ?)", (player_id, total_time))
 
     # Commit the changes to the database
     conn.commit()
