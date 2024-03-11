@@ -120,19 +120,24 @@ setup_game()
 while True:
     # Player Name Input
     while not done:
+        grey = (34, 40, 49)
         # Load background image
         screen.blit(bgImage, bgImageRect)
 
         # Display top 5 players
-        top_players_text = font.render("Top 5 Players:", True, WHITE)
-        screen.blit(top_players_text, (550, 20))
+        top_players_text = font.render("TOP 5 PLAYERS:", True, grey)
+        screen.blit(top_players_text, (620, 20))
+        
+        lImage = pygame.image.load('logo.jpg')
+        lImage = pygame.transform.scale(lImage, (250, 250))
+        lImageRect = lImage.get_rect()
+        screen.blit(lImage,((gameWidth/2)-250/2, 250))
+
         #title
-        toptext = font.render("Tile Flip", True, WHITE)
-        toptext = pygame.transform.scale(toptext, (100, 60))
-        screen.blit(toptext, (353, 300))
+      
         for idx, (name, time_taken) in enumerate(top_players):
-            player_text = font.render(f"{idx+1}. {name}: {time_taken} sec", True, WHITE)
-            screen.blit(player_text, (550, 50 + idx * 30))
+            player_text = font.render(f"{idx+1}. {name}: {time_taken} sec", True, grey)
+            screen.blit(player_text, (600, 50 + idx * 30))
 
         # Input events
         for event in pygame.event.get():
@@ -163,15 +168,15 @@ while True:
 
         # Render the input_box and text.
         pygame.draw.rect(screen, BROWN, input_box, 2)  # Change color to brown
-        font = pygame.font.Font(None, 32)
+        font = pygame.font.Font(None, 24)
         text_surface = font.render(text, True, BROWN)
-        width = max(200, text_surface.get_width() + 10)
+        width = max(240, text_surface.get_width() + 10)
         input_box.w = width
         screen.blit(text_surface, (input_box.x + 5, input_box.y + 5))
 
         # Render "Enter Your Name" text with brown color
         enter_name_font = pygame.font.Font(None, 24)
-        enter_name_text = enter_name_font.render("Enter Your Name", True, BROWN)  # Render with brown color
+        enter_name_text = enter_name_font.render("ENTER YOUR NAME :", True, BROWN)  # Render with brown color
         screen.blit(enter_name_text, (input_box.x, input_box.y - 30))
 
         pygame.display.flip()
@@ -199,12 +204,17 @@ while True:
                             else:
                                 selection1 = memPicsRect.index(item)
                                 hiddenImages[selection1] = True
+        lImage = pygame.image.load('logo.jpg')
+        lImage = pygame.transform.scale(lImage, (picSize, picSize))
+        lImageRect = lImage.get_rect()
 
         for i in range(len(memoryPictures)):
             if hiddenImages[i] == True:
                 screen.blit(memPics[i], memPicsRect[i])
             else:
                 pygame.draw.rect(screen, WHITE, (memPicsRect[i][0], memPicsRect[i][1], picSize, picSize))
+                screen.blit(lImage,(memPicsRect[i][0], memPicsRect[i][1], picSize, picSize))
+
 
         # Calculate total time taken and render timer text
         end_time = time.time()
