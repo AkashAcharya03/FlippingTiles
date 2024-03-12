@@ -238,6 +238,7 @@ while True:
             win *= hiddenImages[number]
 
         if win == 1:
+            pygame.time.wait(5000)
             break
 
     if not done:  # If the game was not completed (player quit), don't store the time in the database
@@ -266,7 +267,7 @@ while True:
         screen.blit(bgImage, bgImageRect)
 
         # Display the print text
-        screen.blit(print_text, (gameWidth // 2 - print_text.get_width() // 2, gameHeight // 2 - print_text.get_height() // 2))
+        screen.blit(print_text, (gameWidth // 2 - 150, gameHeight // 2 - print_text.get_height() // 2))
 
         # Prompt for restart or quit
         restart_text = font.render("Press 'R' to restart or 'Q' to quit", True, WHITE)
