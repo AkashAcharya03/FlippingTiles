@@ -238,6 +238,7 @@ while True:
             win *= hiddenImages[number]
 
         if win == 1:
+            pygame.time.wait(5000)
             break
 
     if not done:  # If the game was not completed (player quit), don't store the time in the database
