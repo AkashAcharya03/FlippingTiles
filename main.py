@@ -60,7 +60,7 @@ def restart_game():
 # Loading the pygame screen.
 screen = pygame.display.set_mode((gameWidth, gameHeight))
 pygame.display.set_caption('Tile Flip-Memory Game')
-gameIcon = pygame.image.load('images/chrome.png')
+gameIcon = pygame.image.load('logo.jpg')
 pygame.display.set_icon(gameIcon)
 
 # Load the BackGround image into Python
@@ -266,7 +266,7 @@ while True:
         screen.blit(bgImage, bgImageRect)
 
         # Display the print text
-        screen.blit(print_text, (gameWidth // 2 - print_text.get_width() // 2, gameHeight // 2 - print_text.get_height() // 2))
+        screen.blit(print_text, (gameWidth // 2 - 150, gameHeight // 2 - print_text.get_height() // 2))
 
         # Prompt for restart or quit
         restart_text = font.render("Press 'R' to restart or 'Q' to quit", True, WHITE)
